@@ -9,14 +9,14 @@ class Program
 {
     private static Logger _debugLogger;
     private static string _version = "2.0.0";
-    private static string _name = "swiftmac";
+    private static string _name = "sharpwin";
     private static StateStore _ss;
     private static SpeechSynthesizer _speaker;
     private static TonePlayer _tonePlayer;
 
     static async Task Main(string[] args)
     {
-        _debugLogger = new Logger("swiftmac-debug.log");
+        _debugLogger = new Logger("sharpwin-debug.log");
         _ss = new StateStore();
         _speaker = new SpeechSynthesizer();
         _tonePlayer = new TonePlayer();
