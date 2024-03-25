@@ -8,19 +8,14 @@ using System.Threading.Tasks;
 class Program
 {
     private static Logger _debugLogger = new Logger("test.log");
-    private static string _version = "2.0.0";
-    private static string _name = "sharpwin";
-    private static StateStore _ss;
-    private static SpeechSynthesizer _speaker;
-    private static TonePlayer _tonePlayer;
+    private static string _version = "1.0.0";
+    private static string _name = "SharpWin";
+    private static StateStore _ss = new StateStore();
+    private static SpeechSynthesizer _speaker = new SpeechSynthesizer();
+    private static TonePlayer _tonePlayer = new TonePlayer();
 
     static async Task Main(string[] args)
     {
-        _debugLogger = new Logger("sharpwin-debug.log");
-        _ss = new StateStore();
-        _speaker = new SpeechSynthesizer();
-        _tonePlayer = new TonePlayer();
-
         _debugLogger.Log("Enter: main");
         await InstantVersion();
 
@@ -118,7 +113,8 @@ class Program
 
     private static async Task DispatchPendingQueue()
     {
-        while (_ss.PopFromPendingQueue() is (string cmd, string parameters) item)
+        (string cmd, string parameters) item;
+        while ((item = _ss.PopFromPendingQueue()) != (null, null)) // Assuming it returns (null, null) when empty or some similar logic
         {
             _debugLogger.Log($"got queued {item.cmd} {item.parameters}");
             switch (item.cmd)
@@ -534,7 +530,7 @@ private static async Task TtsSetPitchMultiplier(string p)
     private static async Task DoPlaySound(string p)
     {
         _debugLogger.Log("Enter: doPlaySound");
-        await SoundManager.Instance.PlaySoundAsync(p, _ss.SoundVolume);
+        await SoundManager.Instance.PlaySoundAsync(p);
     }
 
     private static async Task InstantTtsSay(string p)
@@ -549,7 +545,7 @@ private static async Task TtsSetPitchMultiplier(string p)
     {
         _debugLogger.Log("Enter: doStopAll");
         await DoStopSpeaking();
-        await _tonePlayer.StopAsync();
+        await _tonePlayer.Stop();
         SoundManager.Instance.StopCurrentSound();
     }
 

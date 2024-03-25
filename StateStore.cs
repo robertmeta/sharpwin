@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,7 +37,7 @@ public class StateStore
         _pendingQueue.Add(item);
     }
 
-    public (string, string)? PopFromPendingQueue()
+    public (string cmd, string parameters) PopFromPendingQueue()
     {
         if (_pendingQueue.Any())
         {
@@ -154,11 +154,6 @@ public class StateStore
             DeadpanMode = deadpanMode;
         }
 
-        // Assuming you have a DebugLogger class with a Log method
-        DebugLogger.Log($"soundVolume {SoundVolume}");
-        DebugLogger.Log($"toneVolume {ToneVolume}");
-        DebugLogger.Log($"voiceVolume {VoiceVolume}");
-        DebugLogger.Log($"deadpanMode {DeadpanMode}");
     }
 
     public float GetCharacterRate()
