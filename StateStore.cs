@@ -45,7 +45,7 @@ public class StateStore
             _pendingQueue.RemoveAt(0);
             return item;
         }
-        return null;
+        return ("", "");
     }
 
     public void ClearPendingQueue()
@@ -88,8 +88,8 @@ public class StateStore
         set { _soundVolume = value; }
     }
 
-    private float _speechRate = 0.5f;
-    public float SpeechRate
+    private int _speechRate = 2;
+    public int SpeechRate
     {
         get { return _speechRate; }
         set { _speechRate = value; }
@@ -156,9 +156,9 @@ public class StateStore
 
     }
 
-    public float GetCharacterRate()
+    public int GetCharacterRate()
     {
-        return SpeechRate * CharacterScale;
+        return (int)Math.Round(SpeechRate * CharacterScale);
     }
 
     private string GetEnvironmentVariable(string variable)
@@ -175,7 +175,7 @@ public class StateStore
     public void SetPreDelay(TimeSpan value) { _preDelay = value; }
     public void SetPunctuations(string value) { _punctuations = value; }
     public void SetSoundVolume(float value) { _soundVolume = value; }
-    public void SetSpeechRate(float value) { _speechRate = value; }
+    public void SetSpeechRate(int value) { _speechRate = value; }
     public void SetSplitCaps(bool value) { _splitCaps = value; }
     public void SetToneVolume(float value) { _toneVolume = value; }
     public void SetTtsDiscard(bool value) { _ttsDiscard = value; }

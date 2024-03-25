@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 class Program
 {
-    private static Logger _debugLogger = new Logger("test.log");
+    private static Logger _debugLogger = new Logger("asdfasdf.log");
     private static string _version = "1.0.0";
     private static string _name = "SharpWin";
     private static StateStore _ss = new StateStore();
@@ -282,7 +282,7 @@ class Program
                 _ss.SetPitchMultiplier(1.5f);
             }
         }
-        float oldSpeechRate = _ss.SpeechRate;
+        int oldSpeechRate = _ss.SpeechRate;
         _ss.SetSpeechRate(_ss.GetCharacterRate());
         await DoStopSpeaking();
         await DoSpeak(p.ToLower());
@@ -459,7 +459,7 @@ class Program
     private static async Task TtsSetSpeechRate(string p)
     {
         _debugLogger.Log("Enter: ttsSetSpeechRate");
-        if (float.TryParse(p, out float speechRate))
+        if (int.TryParse(p, out int speechRate))
         {
             _ss.SetSpeechRate(speechRate);
         }
@@ -545,7 +545,7 @@ private static async Task TtsSetPitchMultiplier(string p)
     {
         _debugLogger.Log("Enter: doStopAll");
         await DoStopSpeaking();
-        await _tonePlayer.Stop();
+        _tonePlayer.Stop();
         SoundManager.Instance.StopCurrentSound();
     }
 
@@ -575,13 +575,16 @@ private static async Task TtsSetPitchMultiplier(string p)
         _speaker.Rate = _ss.SpeechRate;
 
         // Set the pitch (0.5 to 2.0)
-        _speaker.Pitch = _ss.PitchMultiplier;
-
+        // TODO: Find out how to do this 
+        // _speaker.Pitch = _ss.PitchMultiplier;
+        
         // Set the volume (0.0 to 1.0)
-        _speaker.Volume = _ss.VoiceVolume;
+        // TODO: Find out how to do this 
+        // _speaker.Volume = _ss.VoiceVolume;
 
         // Set the voice
-        _speaker.SelectVoice(_ss.Voice);
+        // TODO: implement voice change
+        // _speaker.SelectVoice(_ss.Voice);
 
         // Start speaking
         _speaker.SpeakAsync(builder);

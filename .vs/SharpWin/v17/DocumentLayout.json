@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "\\\\Mac\\Home\\projects\\robertmeta\\SharpWin\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{74CCB710-103E-4AE2-8ED4-5F35C52655EB}|SharpWin.csproj|\\\\mac\\home\\projects\\robertmeta\\sharpwin\\statestore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{74CCB710-103E-4AE2-8ED4-5F35C52655EB}|SharpWin.csproj|\\\\mac\\home\\projects\\robertmeta\\sharpwin\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{74CCB710-103E-4AE2-8ED4-5F35C52655EB}|SharpWin.csproj|\\\\mac\\home\\projects\\robertmeta\\sharpwin\\toneplayer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{74CCB710-103E-4AE2-8ED4-5F35C52655EB}|SharpWin.csproj|\\\\mac\\home\\projects\\robertmeta\\sharpwin\\statestore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{74CCB710-103E-4AE2-8ED4-5F35C52655EB}|SharpWin.csproj|\\\\mac\\home\\projects\\robertmeta\\sharpwin\\soundmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{74CCB710-103E-4AE2-8ED4-5F35C52655EB}|SharpWin.csproj|\\\\mac\\home\\projects\\robertmeta\\sharpwin\\toneplayer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{74CCB710-103E-4AE2-8ED4-5F35C52655EB}|SharpWin.csproj|\\\\mac\\home\\projects\\robertmeta\\sharpwin\\logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -25,30 +25,30 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "SoundManager.cs",
               "DocumentMoniker": "\\\\Mac\\Home\\projects\\robertmeta\\SharpWin\\SoundManager.cs",
               "RelativeDocumentMoniker": "SoundManager.cs",
               "ToolTip": "\\\\Mac\\Home\\projects\\robertmeta\\SharpWin\\SoundManager.cs",
               "RelativeToolTip": "SoundManager.cs",
-              "ViewState": "AQIAABoAAAAAAAAAAAAxwDQAAAAAAAAA",
+              "ViewState": "AQIAAEcAAAAAAAAAAAAxwGEAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-25T15:55:01.445Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "StateStore.cs",
               "DocumentMoniker": "\\\\Mac\\Home\\projects\\robertmeta\\SharpWin\\StateStore.cs",
               "RelativeDocumentMoniker": "StateStore.cs",
-              "ToolTip": "\\\\Mac\\Home\\projects\\robertmeta\\SharpWin\\StateStore.cs*",
-              "RelativeToolTip": "StateStore.cs*",
-              "ViewState": "AQIAAJYAAAAAAAAAAAAAAJwAAAAAAAAA",
+              "ToolTip": "\\\\Mac\\Home\\projects\\robertmeta\\SharpWin\\StateStore.cs",
+              "RelativeToolTip": "StateStore.cs",
+              "ViewState": "AQIAAE8AAAAAAAAAAAAqwFoAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-25T13:50:38.501Z",
               "EditorCaption": ""
@@ -68,7 +68,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "TonePlayer.cs",
               "DocumentMoniker": "\\\\Mac\\Home\\projects\\robertmeta\\SharpWin\\TonePlayer.cs",
               "RelativeDocumentMoniker": "TonePlayer.cs",
@@ -81,13 +81,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "\\\\Mac\\Home\\projects\\robertmeta\\SharpWin\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "\\\\Mac\\Home\\projects\\robertmeta\\SharpWin\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAADcCAAAAAAAAAIA3wEQCAAAaAAAA",
+              "ViewState": "AQIAADwCAAAAAAAAAAAIwEkCAAAnAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-24T23:48:52.634Z",
               "EditorCaption": ""
