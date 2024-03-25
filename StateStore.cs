@@ -45,7 +45,7 @@ public class StateStore
             _pendingQueue.RemoveAt(0);
             return item;
         }
-        return ("", "");
+        return (null, null);
     }
 
     public void ClearPendingQueue()

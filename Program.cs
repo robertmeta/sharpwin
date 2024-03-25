@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 class Program
 {
-    private static Logger _debugLogger = new Logger("asdfasdf.log");
+    private static Logger _debugLogger = new Logger("asdasdfasdfasdf.log");
     private static string _version = "1.0.0";
     private static string _name = "SharpWin";
     private static StateStore _ss = new StateStore();
