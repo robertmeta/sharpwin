@@ -2,7 +2,7 @@
 
 ## Introduction 
 
-This is an emacspeak server written in swift intended to be as async as 
+This is an emacspeak server written in C# intended to be as async as 
 reasonable, fast and responsive.
 
 Unless you are a developer or interested in becoming one, you probably 

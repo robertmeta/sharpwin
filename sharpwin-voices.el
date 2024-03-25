@@ -62,7 +62,7 @@
 ;;;  Customizations:
 
 (defcustom sharpwin-default-speech-rate 0.5
-  "Default speech rate for swiftsharpwin."
+  "Default speech rate for C#sharpwin."
   :group 'tts
   :type 'integer
   :set #'(lambda(sym val)

@@ -2,7 +2,7 @@ sharpwin
 ==============================================================================
 This is a drop in replacement for the python "mac" server.
 
-Quick Install (requires swift compiler)
+Quick Install (requires C# compiler)
 ------------------------------------------------------------------------------
  - make sharpwin (from emacspeak root, ignore warnings)
  - Change the server in your configuration to "sharpwin"
