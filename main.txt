@@ -470,7 +470,7 @@ _ss.SetSpeechRate(speechRate);
 }
 
 
-Copy code
+
 private static async Task TtsSetPitchMultiplier(string p)
 {
     _debugLogger.Log("Enter: ttsSetPitchMultiplier");

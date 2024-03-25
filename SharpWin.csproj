@@ -5,8 +5,28 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="mechanical\main.cs" />
+    <Compile Remove="SoundManger.cs" />
+    <Compile Remove="StateStore.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="main.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SoundManger.cs" />
+    <None Include="StateStore.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Speech" />
+    <!--
+    <PackageReference Include="System.Collections.Generic" />
+    <PackageReference Include="System.Linq" />
+    -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="mechanical\" />
   </ItemGroup>
 </Project>
