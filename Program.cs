@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Speech.Synthesis;
+﻿using System.Speech.Synthesis;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 class Program
 {
     private static Logger _debugLogger = Logger.GetInstance();
-    private static string _version = "1.0.0";
+    private static string _version = "1.0.1";
     private static string _name = "SharpWin";
     private static StateStore _ss = new StateStore();
     private static SpeechSynthesizer _speaker = new SpeechSynthesizer();
@@ -17,9 +12,9 @@ class Program
 
     static async Task Main(string[] args)
     {
-       
-            _debugLogger.Log("Enter: main");
-            await InstantVersion();
+
+        _debugLogger.Log("Enter: main");
+        await InstantVersion();
 
         while (true)
         {
@@ -119,8 +114,8 @@ class Program
             }
         } // End of while loop
     }
-  
-         
+
+
 
 
 
@@ -479,8 +474,8 @@ class Program
     }
 
 
-    
-private static async Task TtsSetPitchMultiplier(string p)
+
+    private static async Task TtsSetPitchMultiplier(string p)
     {
         _debugLogger.Log("Enter: ttsSetPitchMultiplier");
         if (float.TryParse(p, out float pitchMultiplier))
@@ -590,7 +585,7 @@ private static async Task TtsSetPitchMultiplier(string p)
         // Set the pitch (0.5 to 2.0)
         // TODO: Find out how to do this 
         // _speaker.Pitch = _ss.PitchMultiplier;
-        
+
         // Set the volume (0.0 to 1.0)
         // TODO: Find out how to do this 
         // _speaker.Volume = _ss.VoiceVolume;
@@ -598,7 +593,7 @@ private static async Task TtsSetPitchMultiplier(string p)
         // Set the voice
         // TODO: implement voice change
         // _speaker.SelectVoice(_ss.Voice);
-        
+
         // Start speaking
         _speaker.SpeakAsync(builder);
     }

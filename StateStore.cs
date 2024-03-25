@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-public class StateStore
+﻿public class StateStore
 {
     private bool _allCapsBeep = false;
     public bool AllCapsBeep
