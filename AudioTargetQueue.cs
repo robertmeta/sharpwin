@@ -12,10 +12,15 @@ public class AudioTargetQueue
     private Queue<PromptBuilder> _textQueue = new Queue<PromptBuilder>();
     private bool _isPlaying = false;
     private CancellationTokenSource _cancellationTokenSource;
+    private string _target = "None";
 
     public AudioTargetQueue()
     {
         _cancellationTokenSource = new CancellationTokenSource();
+    }
+
+    public void SetTarget(string t) {
+        _target = t;
     }
 
     public void EnqueueText(PromptBuilder text)
@@ -57,7 +62,7 @@ public class AudioTargetQueue
             using (var waveOut = new WaveOutEvent())
             using (var rawSource = new RawSourceWaveStream(ms, new WaveFormat(22000, 1)))
             {
-                var stereo = new MonoToStereoProvider(rawSource);
+                var stereo = new MonoToStereoProvider(rawSource, _target);
 
                 waveOut.Init(stereo);
                 waveOut.Play();

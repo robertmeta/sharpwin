@@ -1,4 +1,4 @@
-﻿using System.Speech.Synthesis;
+using System.Speech.Synthesis;
 using System.Text.RegularExpressions;
 using System;
 using System.IO;
@@ -13,12 +13,15 @@ class Program
     private static StateStore _ss = new StateStore();
     private static SpeechSynthesizer _speaker = new SpeechSynthesizer();
     private static TonePlayer _tonePlayer = new TonePlayer();
+    private static AudioTargetQueue _audioQueue = new AudioTargetQueue();
 
     static async Task Main(string[] args)
     {
 
         _debugLogger.Log("Enter: main");
         await InstantVersion();
+
+        _audioQueue.SetTarget(_ss.AudioTarget);
 
         while (true)
         {
@@ -582,8 +585,6 @@ class Program
         _debugLogger.Log("Enter: doSpeak");
         PromptBuilder builder = new PromptBuilder();
         builder.AppendText(what);
-        builder.AppendText("a t is: ");
-        builder.AppendText(_ss.AudioTarget);
 
         // Set the rate of speech (0.5 to 1.0)
         _speaker.Rate = _ss.SpeechRate;
@@ -602,8 +603,7 @@ class Program
 
         // Start speaking
         // _speaker.SpeakAsync(builder);
-        var audioQueue = new AudioTargetQueue();
-        audioQueue.EnqueueText(builder);
+        _audioQueue.EnqueueText(builder);
 
     }
 

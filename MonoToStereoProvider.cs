@@ -3,11 +3,18 @@ using NAudio.Wave;
 public class MonoToStereoProvider : IWaveProvider
 {
     private readonly IWaveProvider sourceWaveProvider;
-    public float LeftVolume { get; set; } = 0.0f; // Default volume is full
+    public float LeftVolume { get; set; } = 1.0f; // Default volume is full
     public float RightVolume { get; set; } = 1.0f; // Default volume is full
 
-    public MonoToStereoProvider(IWaveProvider sourceWaveProvider)
+    public MonoToStereoProvider(IWaveProvider sourceWaveProvider, string target)
     {
+        System.WriteLine("Target: "+target)
+        if (target == "right") {
+            this.LeftVolume = 0.0f;
+        }
+        if (target == "left") {
+            this.RightVolume = 0.0f;
+        }
         if (sourceWaveProvider.WaveFormat.Channels != 1)
         {
             throw new InvalidOperationException("Source must be mono.");
