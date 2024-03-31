@@ -1,5 +1,9 @@
 ﻿using System.Speech.Synthesis;
 using System.Text.RegularExpressions;
+using System;
+using System.IO;
+using System.Speech.Synthesis;
+using NAudio.Wave;
 
 class Program
 {
@@ -122,7 +126,7 @@ class Program
     private static async Task DispatchPendingQueue()
     {
         (string cmd, string parameters) item;
-        while ((item = _ss.PopFromPendingQueue()) != (null, null)) // Assuming it returns (null, null) when empty or some similar logic
+        while ((item = _ss.PopFromPendingQueue()) != (null, null))
         {
             _debugLogger.Log($"got queued {item.cmd} {item.parameters}");
             switch (item.cmd)
@@ -595,7 +599,10 @@ class Program
         // _speaker.SelectVoice(_ss.Voice);
 
         // Start speaking
-        _speaker.SpeakAsync(builder);
+        // _speaker.SpeakAsync(builder);
+        var audioQueue = new AudioTargetQueue();
+        audioQueue.EnqueueText("BITCH");
+
     }
 
     private static async Task InstantTtsExit()

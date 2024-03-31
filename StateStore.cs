@@ -14,11 +14,11 @@
         set { _characterScale = value; }
     }
 
-    private bool _deadpanMode = false;
-    public bool DeadpanMode
+    private string _audioTarget = "None";
+    public string AudioTarget
     {
-        get { return _deadpanMode; }
-        set { _deadpanMode = value; }
+        get { return _audioTarget.ToLower(); }
+        set { _audioTarget = value; }
     }
 
     private List<(string, string)> _pendingQueue = new List<(string, string)>();
@@ -129,27 +129,23 @@
     public StateStore()
     {
         SoundVolume = 1.0f;
-        if (float.TryParse(GetEnvironmentVariable("SWIFTMAC_SOUND_VOLUME"), out float soundVolume))
+        if (float.TryParse(GetEnvironmentVariable("SHARPWIN_SOUND_VOLUME"), out float soundVolume))
         {
             SoundVolume = soundVolume;
         }
 
         ToneVolume = 1.0f;
-        if (float.TryParse(GetEnvironmentVariable("SWIFTMAC_TONE_VOLUME"), out float toneVolume))
+        if (float.TryParse(GetEnvironmentVariable("SHARPWIN_TONE_VOLUME"), out float toneVolume))
         {
             ToneVolume = toneVolume;
         }
 
-        if (float.TryParse(GetEnvironmentVariable("SWIFTMAC_VOICE_VOLUME"), out float voiceVolume))
+        if (float.TryParse(GetEnvironmentVariable("SHARPWIN_VOICE_VOLUME"), out float voiceVolume))
         {
             VoiceVolume = voiceVolume;
         }
 
-        if (bool.TryParse(GetEnvironmentVariable("SWIFTMAC_DEADPAN_MODE"), out bool deadpanMode))
-        {
-            DeadpanMode = deadpanMode;
-        }
-
+        AudioTarget = GetEnvironmentVariable("SHARPWIN_AUDIO_TARGET");
     }
 
     public int GetCharacterRate()
@@ -165,7 +161,7 @@
     // Setter methods for properties
     public void SetAllCapsBeep(bool value) { _allCapsBeep = value; }
     public void SetCharacterScale(float value) { _characterScale = value; }
-    public void SetDeadpanMode(bool value) { _deadpanMode = value; }
+    public void SetAudioTarget(string value) { _audioTarget = value; }
     public void SetPitchMultiplier(float value) { _pitchMultiplier = value; }
     public void SetPostDelay(TimeSpan value) { _postDelay = value; }
     public void SetPreDelay(TimeSpan value) { _preDelay = value; }
