@@ -582,6 +582,8 @@ class Program
         _debugLogger.Log("Enter: doSpeak");
         PromptBuilder builder = new PromptBuilder();
         builder.AppendText(what);
+        builder.AppendText("a t is: ");
+        builder.AppendText(_ss.AudioTarget);
 
         // Set the rate of speech (0.5 to 1.0)
         _speaker.Rate = _ss.SpeechRate;
