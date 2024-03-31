@@ -601,7 +601,7 @@ class Program
         // Start speaking
         // _speaker.SpeakAsync(builder);
         var audioQueue = new AudioTargetQueue();
-        audioQueue.EnqueueText("BITCH");
+        audioQueue.EnqueueText(builder);
 
     }
 

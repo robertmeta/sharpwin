@@ -1,4 +1,5 @@
 using System;
+using System.Speech.Synthesis;
 using System.Collections.Generic;
 using System.IO;
 using System.Speech.Synthesis;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 public class AudioTargetQueue
 {
-    private Queue<string> _textQueue = new Queue<string>();
+    private Queue<PromptBuilder> _textQueue = new Queue<PromptBuilder>();
     private bool _isPlaying = false;
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -17,7 +18,7 @@ public class AudioTargetQueue
         _cancellationTokenSource = new CancellationTokenSource();
     }
 
-    public void EnqueueText(string text)
+    public void EnqueueText(PromptBuilder text)
     {
         _textQueue.Enqueue(text);
 
@@ -41,7 +42,7 @@ public class AudioTargetQueue
         _isPlaying = false;
     }
 
-    private Task SynthesizeAndPlayAsync(string text, CancellationToken cancellationToken)
+    private Task SynthesizeAndPlayAsync(PromptBuilder text, CancellationToken cancellationToken)
     {
         var tcs = new TaskCompletionSource<bool>();
 
@@ -54,7 +55,7 @@ public class AudioTargetQueue
             ms.Position = 0;
 
             using (var waveOut = new WaveOutEvent())
-            using (var rawSource = new RawSourceWaveStream(ms, new WaveFormat(16000, 1)))
+            using (var rawSource = new RawSourceWaveStream(ms, new WaveFormat(22000, 1)))
             {
                 var stereo = new MonoToStereoProvider(rawSource);
 
