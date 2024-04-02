@@ -8,7 +8,6 @@ public class MonoToStereoProvider : IWaveProvider
 
     public MonoToStereoProvider(IWaveProvider sourceWaveProvider, string target)
     {
-        System.WriteLine("Target: "+target)
         if (target == "right") {
             this.LeftVolume = 0.0f;
         }

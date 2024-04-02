@@ -1,4 +1,7 @@
-﻿public class StateStore
+﻿using System;
+using System.Speech.Synthesis;
+
+public class StateStore
 {
     private bool _allCapsBeep = false;
     public bool AllCapsBeep
@@ -119,8 +122,8 @@
         set { _voice = value; }
     }
 
-    private float _voiceVolume = 1f;
-    public float VoiceVolume
+    private int _voiceVolume = 50;
+    public int VoiceVolume
     {
         get { return _voiceVolume; }
         set { _voiceVolume = value; }
@@ -140,7 +143,7 @@
             ToneVolume = toneVolume;
         }
 
-        if (float.TryParse(GetEnvironmentVariable("SHARPWIN_VOICE_VOLUME"), out float voiceVolume))
+        if (int.TryParse(GetEnvironmentVariable("SHARPWIN_VOICE_VOLUME"), out int voiceVolume))
         {
             VoiceVolume = voiceVolume;
         }
@@ -171,6 +174,23 @@
     public void SetSplitCaps(bool value) { _splitCaps = value; }
     public void SetToneVolume(float value) { _toneVolume = value; }
     public void SetTtsDiscard(bool value) { _ttsDiscard = value; }
-    public void SetVoice(string value) { _voice = value; }
-    public void SetVoiceVolume(float value) { _voiceVolume = value; }
+    public void SetVoice(string value)
+    {
+        using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
+        {
+            string voiceSubstring = value;
+            var matchingVoice = synthesizer.GetInstalledVoices().FirstOrDefault(v => v.VoiceInfo.Name.Contains(voiceSubstring));
+
+            if (matchingVoice != null)
+            {
+                _voice = matchingVoice.VoiceInfo.Name;
+            }
+            else
+            {
+                _voice = "donotset";
+            }
+        }
+        Console.WriteLine("Voice is set to: "+_voice);
+    }
+    public void SetVoiceVolume(int value) { _voiceVolume = value; }
 }

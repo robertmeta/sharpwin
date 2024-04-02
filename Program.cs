@@ -381,7 +381,7 @@ class Program
             case "all":
                 return ReplaceAllPuncs(s);
             case "some":
-                return ReplaceSomePuncs(s);
+                 return ReplaceSomePuncs(s);
             default:
                 return ReplaceBasePuncs(s);
         }
@@ -432,9 +432,25 @@ class Program
             .Replace(",", " comma ");
     }
 
+    private static async Task<string> BuildSsml(string p)
+    {
+        _debugLogger.Log("Enter: BuildSsml");
+        // <audio src='path/to/your/audio/file.wav'/>
+        string ssml = @"
+<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
+    <voice name='"+_ss.Voice+@"'>
+        <prosody pitch='"+_ss.PitchMultiplier+@"%'>
+            "+p+@"
+        </prosody>
+    </voice>
+</speak>";
+        return ssml;
+    }
+
+
     private static async Task TtsSplitCaps(string p)
     {
-        _debugLogger.Log("Enter: ttsSplitCaps");
+        _debugLogger.Log("Enter: TtsSplitCaps");
         _ss.SetSplitCaps(p == "1");
     }
 
@@ -465,7 +481,7 @@ class Program
     private static async Task TtsSetVoiceVolume(string p)
     {
         _debugLogger.Log("Enter: ttsSetVoiceVolume");
-        if (float.TryParse(p, out float voiceVolume))
+        if (int.TryParse(p, out int voiceVolume))
         {
             _ss.SetVoiceVolume(voiceVolume);
         }
@@ -583,27 +599,20 @@ class Program
     private static async Task _DoSpeak(string what)
     {
         _debugLogger.Log("Enter: doSpeak");
-        PromptBuilder builder = new PromptBuilder();
-        builder.AppendText(what);
+        // Important: lots of the settings live in
+        // this builder
+        string ssml = await BuildSsml(what);
 
-        // Set the rate of speech (0.5 to 1.0)
+        // Set the rate of speech (-109 to 10)
         _speaker.Rate = _ss.SpeechRate;
 
-        // Set the pitch (0.5 to 2.0)
-        // TODO: Find out how to do this 
-        // _speaker.Pitch = _ss.PitchMultiplier;
 
-        // Set the volume (0.0 to 1.0)
-        // TODO: Find out how to do this 
-        // _speaker.Volume = _ss.VoiceVolume;
-
-        // Set the voice
-        // TODO: implement voice change
-        // _speaker.SelectVoice(_ss.Voice);
+        // Set the volume (0 to 100)
+        _speaker.Volume = _ss.VoiceVolume;
 
         // Start speaking
-        // _speaker.SpeakAsync(builder);
-        _audioQueue.EnqueueText(builder);
+        _speaker.SpeakSsmlAsync(ssml);
+        //_audioQueue.EnqueueText(builder);
 
     }
 
