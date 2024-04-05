@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 public class AudioTargetQueue
 {
-    private Queue<PromptBuilder> _textQueue = new Queue<PromptBuilder>();
+    private Queue<string> _textQueue = new Queue<string>();
     private bool _isPlaying = false;
     private CancellationTokenSource _cancellationTokenSource;
     private string _target = "None";
@@ -23,7 +23,7 @@ public class AudioTargetQueue
         _target = t;
     }
 
-    public void EnqueueText(PromptBuilder text)
+    public void EnqueueText(string text)
     {
         _textQueue.Enqueue(text);
 
@@ -47,7 +47,7 @@ public class AudioTargetQueue
         _isPlaying = false;
     }
 
-    private Task SynthesizeAndPlayAsync(PromptBuilder text, CancellationToken cancellationToken)
+    private Task SynthesizeAndPlayAsync(string text, CancellationToken cancellationToken)
     {
         var tcs = new TaskCompletionSource<bool>();
 
@@ -55,7 +55,7 @@ public class AudioTargetQueue
         using (var ms = new MemoryStream())
         {
             synthesizer.SetOutputToWaveStream(ms);
-            synthesizer.Speak(text);
+            synthesizer.SpeakSsml(text);
 
             ms.Position = 0;
 

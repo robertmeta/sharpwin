@@ -18,7 +18,7 @@ class Program
     static async Task Main(string[] args)
     {
 
-        _debugLogger.Log("Enter: main");
+        await _debugLogger.Log("Enter: main");
         await InstantVersion();
 
         _audioQueue.SetTarget(_ss.AudioTarget);
@@ -28,7 +28,7 @@ class Program
             try
             {
                 string l = Console.ReadLine();
-                _debugLogger.Log($"got line {l}");
+                await _debugLogger.Log($"got line {l}");
                 (string cmd, string parameters) = await IsolateCmdAndParams(l);
                 switch (cmd)
                 {
@@ -48,7 +48,7 @@ class Program
                         await DoPlaySound(parameters);
                         break;
                     case "q":
-                        await ProcessAndQueueSpeech(parameters);
+                        await QueueLine(cmd, parameters);
                         break;
                     case "s":
                         await QueueLine(cmd, parameters);
@@ -118,6 +118,7 @@ class Program
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e.Message}");
+                Environment.Exit(0);
             }
         } // End of while loop
     }
@@ -131,7 +132,7 @@ class Program
         (string cmd, string parameters) item;
         while ((item = _ss.PopFromPendingQueue()) != (null, null))
         {
-            _debugLogger.Log($"got queued {item.cmd} {item.parameters}");
+            await _debugLogger.Log($"got queued {item.cmd} {item.parameters}");
             switch (item.cmd)
             {
                 case "p":
@@ -143,7 +144,7 @@ class Program
                 case "sh":
                     await DoSilence(item.parameters);
                     break;
-                case "speak":
+                case "q":
                     await DoSpeak(item.parameters);
                     break;
                 case "t":
@@ -188,7 +189,7 @@ class Program
 
     private static async Task QueueLine(string cmd, string parameters)
     {
-        _debugLogger.Log("Enter: queueLine");
+        await _debugLogger.Log("Enter: queueLine");
         _ss.AppendToPendingQueue((cmd, parameters));
     }
 
@@ -213,34 +214,11 @@ class Program
 
     private static async Task ProcessAndQueueSpeech(string p)
     {
-        string temp;
-        if (_ss.SplitCaps)
-        {
-            temp = InsertSpaceBeforeUppercase(p);
-        }
-        else
-        {
-            temp = p;
-        }
-
-        List<string> parts = await SplitOnSquareStar(temp);
-        foreach (string part in parts)
-        {
-            if (part == "[*]")
-            {
-                _ss.AppendToPendingQueue(("sh", "0"));
-            }
-            else
-            {
-                string speakPart = await ReplacePunctuations(temp);
-                _ss.AppendToPendingQueue(("speak", speakPart));
-            }
-        }
     }
 
-    private static string InsertSpaceBeforeUppercase(string input)
+    private static async Task<string> InsertSpaceBeforeUppercase(string input)
     {
-        _debugLogger.Log("Enter: insertSpaceBeforeUppercase");
+        await _debugLogger.Log("Enter: insertSpaceBeforeUppercase");
         string pattern = "(?<=[a-z])(?=[A-Z])";
         Regex regex = new Regex(pattern);
         string modifiedString = regex.Replace(input, " ");
@@ -249,14 +227,14 @@ class Program
 
     private static async Task InstantTtsReset()
     {
-        _debugLogger.Log("Enter: instantTtsReset");
+        await _debugLogger.Log("Enter: instantTtsReset");
         await DoStopAll();
         _ss = new StateStore();
     }
 
     private static async Task InstantVersion()
     {
-        _debugLogger.Log("Enter: instantVersion");
+        await _debugLogger.Log("Enter: instantVersion");
         string sayVersion = _version.Replace(".", " dot ");
 
         await DoStopAll();
@@ -265,7 +243,7 @@ class Program
 
     private static async Task DoSilence(string p)
     {
-        _debugLogger.Log("Enter: doSilence");
+        await _debugLogger.Log("Enter: doSilence");
         TimeSpan oldPostDelay = _ss.PostDelay;
         if (int.TryParse(p, out int durationInMillis))
         {
@@ -277,16 +255,16 @@ class Program
 
     private static async Task InstantTtsResume()
     {
-        _debugLogger.Log("Enter: instantTtsResume");
+        await _debugLogger.Log("Enter: instantTtsResume");
         _speaker.Resume();
     }
 
     private static async Task InstantLetter(string p)
     {
-        _debugLogger.Log("Enter: unknownLine");
+        await _debugLogger.Log("Enter: unknownLine");
         float oldPitchMultiplier = _ss.PitchMultiplier;
         TimeSpan oldPreDelay = _ss.PreDelay;
-        if (IsFirstLetterCapital(p))
+        if (await IsFirstLetterCapital(p))
         {
             if (_ss.AllCapsBeep)
             {
@@ -308,13 +286,13 @@ class Program
 
     private static async Task DoStopSpeaking()
     {
-        _debugLogger.Log("Enter: doStopSpeaking");
+        await _debugLogger.Log("Enter: doStopSpeaking");
         _speaker.SpeakAsyncCancelAll();
     }
 
-    private static bool IsFirstLetterCapital(string str)
+    private static async Task<bool> IsFirstLetterCapital(string str)
     {
-        _debugLogger.Log("Enter: isFirstLetterCapital");
+        await _debugLogger.Log("Enter: isFirstLetterCapital");
         if (string.IsNullOrEmpty(str))
         {
             return false;
@@ -326,27 +304,27 @@ class Program
 
     private static async Task InstantTtsPause()
     {
-        _debugLogger.Log("Enter: instantTtsPause");
+        await _debugLogger.Log("Enter: instantTtsPause");
         _speaker.Pause();
     }
 
     private static async Task UnknownLine(string line)
     {
-        _debugLogger.Log("Enter: unknownLine");
-        _debugLogger.Log($"Unknown command: {line}");
+        await _debugLogger.Log("Enter: unknownLine");
+        await _debugLogger.Log($"Unknown command: {line}");
         Console.WriteLine($"Unknown command: {line}");
     }
 
     private static async Task ImpossibleQueue(string cmd, string parameters)
     {
-        _debugLogger.Log("Enter: impossibleQueue");
-        _debugLogger.Log($"Impossible queue item '{cmd}' '{parameters}'");
+        await _debugLogger.Log("Enter: impossibleQueue");
+        await _debugLogger.Log($"Impossible queue item '{cmd}' '{parameters}'");
         Console.WriteLine($"Impossible queue item '{cmd}' '{parameters}'");
     }
 
-    private static string ExtractVoice(string str)
+    private static async Task<string> ExtractVoice(string str)
     {
-        _debugLogger.Log("Enter: extractVoice");
+        await _debugLogger.Log("Enter: extractVoice");
         string pattern = @"\[\{voice\s+([^\}]+)\}\]";
         Match match = Regex.Match(str, pattern);
 
@@ -360,14 +338,14 @@ class Program
 
     private static async Task ProcessAndQueueAudioIcon(string p)
     {
-        _debugLogger.Log("Enter: processAndQueueAudioIcon");
+        await _debugLogger.Log("Enter: processAndQueueAudioIcon");
         _ss.AppendToPendingQueue(("p", p));
     }
 
     private static async Task ProcessAndQueueCodes(string p)
     {
-        _debugLogger.Log("Enter: processAndQueueCodes");
-        string voice = ExtractVoice(p);
+        await _debugLogger.Log("Enter: processAndQueueCodes");
+        string voice = await ExtractVoice(p);
         if (!string.IsNullOrEmpty(voice))
         {
             _ss.AppendToPendingQueue(("tts_set_voice", voice));
@@ -379,26 +357,26 @@ class Program
         switch (_ss.Punctuations)
         {
             case "all":
-                return ReplaceAllPuncs(s);
+                return (await ReplaceAllPuncs(s));
             case "some":
-                 return ReplaceSomePuncs(s);
+                return (await ReplaceSomePuncs(s));
             default:
-                return ReplaceBasePuncs(s);
+                return (await ReplaceBasePuncs(s));
         }
     }
 
-    private static string ReplaceBasePuncs(string line)
+    private static async Task<string> ReplaceBasePuncs(string line)
     {
-        _debugLogger.Log("Enter: replaceBasePuncs");
+        await _debugLogger.Log("Enter: replaceBasePuncs");
         return line
             .Replace("%", " percent ")
             .Replace("$", " dollar ");
     }
 
-    private static string ReplaceSomePuncs(string line)
+    private static async Task<string> ReplaceSomePuncs(string line)
     {
-        _debugLogger.Log("Enter: replaceSomePuncs");
-        return ReplaceBasePuncs(line)
+        await _debugLogger.Log("Enter: replaceSomePuncs");
+        return (await ReplaceBasePuncs(line))
             .Replace("#", " pound ")
             .Replace("-", " dash ")
             .Replace("\"", " quote ")
@@ -418,10 +396,10 @@ class Program
             .Replace("^", " caret ");
     }
 
-    private static string ReplaceAllPuncs(string line)
+    private static async Task<string> ReplaceAllPuncs(string line)
     {
-        _debugLogger.Log("Enter: replaceAllPuncs");
-        return ReplaceSomePuncs(line)
+        await _debugLogger.Log("Enter: replaceAllPuncs");
+        return (await ReplaceSomePuncs(line))
             .Replace("<", " less than ")
             .Replace(">", " greater than ")
             .Replace("'", " apostrophe ")
@@ -434,12 +412,19 @@ class Program
 
     private static async Task<string> BuildSsml(string p)
     {
-        _debugLogger.Log("Enter: BuildSsml");
+        await _debugLogger.Log("Enter: BuildSsml");
+        float pm = _ss.PitchMultiplier;
+        string prepend = "";
+        if (pm >= 0.0) {
+            prepend = "+";
+        }
+                
+        
         // <audio src='path/to/your/audio/file.wav'/>
         string ssml = @"
 <speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
     <voice name='"+_ss.Voice+@"'>
-        <prosody pitch='"+_ss.PitchMultiplier+@"%'>
+        <prosody pitch='"+prepend+_ss.PitchMultiplier+@"'>
             "+p+@"
         </prosody>
     </voice>
@@ -450,19 +435,19 @@ class Program
 
     private static async Task TtsSplitCaps(string p)
     {
-        _debugLogger.Log("Enter: TtsSplitCaps");
+        await _debugLogger.Log("Enter: TtsSplitCaps");
         _ss.SetSplitCaps(p == "1");
     }
 
     private static async Task TtsSetVoice(string p)
     {
-        _debugLogger.Log("Enter: ttsSetVoice");
+        await _debugLogger.Log("Enter: ttsSetVoice");
         _ss.SetVoice(p);
     }
 
     private static async Task TtsSetToneVolume(string p)
     {
-        _debugLogger.Log("Enter: ttsSetToneVolume");
+        await _debugLogger.Log("Enter: ttsSetToneVolume");
         if (float.TryParse(p, out float toneVolume))
         {
             _ss.SetToneVolume(toneVolume);
@@ -471,7 +456,7 @@ class Program
 
     private static async Task TtsSetSoundVolume(string p)
     {
-        _debugLogger.Log("Enter: ttsSetSoundVolume");
+        await _debugLogger.Log("Enter: ttsSetSoundVolume");
         if (float.TryParse(p, out float soundVolume))
         {
             _ss.SetSoundVolume(soundVolume);
@@ -480,7 +465,7 @@ class Program
 
     private static async Task TtsSetVoiceVolume(string p)
     {
-        _debugLogger.Log("Enter: ttsSetVoiceVolume");
+        await _debugLogger.Log("Enter: ttsSetVoiceVolume");
         if (int.TryParse(p, out int voiceVolume))
         {
             _ss.SetVoiceVolume(voiceVolume);
@@ -489,7 +474,7 @@ class Program
 
     private static async Task TtsSetSpeechRate(string p)
     {
-        _debugLogger.Log("Enter: ttsSetSpeechRate");
+        await _debugLogger.Log("Enter: ttsSetSpeechRate");
         if (int.TryParse(p, out int speechRate))
         {
             _ss.SetSpeechRate(speechRate);
@@ -500,7 +485,7 @@ class Program
 
     private static async Task TtsSetPitchMultiplier(string p)
     {
-        _debugLogger.Log("Enter: ttsSetPitchMultiplier");
+        await _debugLogger.Log("Enter: ttsSetPitchMultiplier");
         if (float.TryParse(p, out float pitchMultiplier))
         {
             _ss.SetPitchMultiplier(pitchMultiplier);
@@ -509,13 +494,13 @@ class Program
 
     private static async Task TtsSetPunctuations(string p)
     {
-        _debugLogger.Log("Enter: ttsSetPunctuations");
+        await _debugLogger.Log("Enter: ttsSetPunctuations");
         _ss.SetPunctuations(p);
     }
 
     private static async Task TtsSetCharacterScale(string p)
     {
-        _debugLogger.Log("Enter: ttsSetCharacterScale");
+        await _debugLogger.Log("Enter: ttsSetCharacterScale");
         if (float.TryParse(p, out float characterScale))
         {
             _ss.SetCharacterScale(characterScale);
@@ -524,13 +509,13 @@ class Program
 
     private static async Task TtsAllCapsBeep(string p)
     {
-        _debugLogger.Log("Enter: ttsAllCapsBeep");
+        await _debugLogger.Log("Enter: ttsAllCapsBeep");
         _ss.SetAllCapsBeep(p == "1");
     }
 
     private static async Task ProcessAndQueueSync(string p)
     {
-        _debugLogger.Log("Enter: processAndQueueSync");
+        await _debugLogger.Log("Enter: processAndQueueSync");
         string[] ps = p.Split(' ');
         if (ps.Length == 4)
         {
@@ -550,7 +535,7 @@ class Program
 
     private static async Task DoTone(string p)
     {
-        _debugLogger.Log("Enter: doTone");
+        await _debugLogger.Log("Enter: doTone");
         string[] ps = p.Split(' ');
         int frequency = int.TryParse(ps[0], out int f) ? f : 500;
         int durationInMillis = int.TryParse(ps[1], out int d) ? d : 75;
@@ -560,21 +545,21 @@ class Program
 
     private static async Task DoPlaySound(string p)
     {
-        _debugLogger.Log("Enter: doPlaySound");
+        await _debugLogger.Log("Enter: doPlaySound");
         await SoundManager.Instance.PlaySoundAsync(p);
     }
 
     private static async Task InstantTtsSay(string p)
     {
-        _debugLogger.Log("Enter: instantTtsSay");
-        _debugLogger.Log($"ttsSay: {p}");
+        await _debugLogger.Log("Enter: instantTtsSay");
+        await _debugLogger.Log($"ttsSay: {p}");
         await DoStopAll();
         await DoSpeak(p);
     }
 
     private static async Task DoStopAll()
     {
-        _debugLogger.Log("Enter: doStopAll");
+        await _debugLogger.Log("Enter: doStopAll");
         await DoStopSpeaking();
         _tonePlayer.Stop();
         SoundManager.Instance.StopCurrentSound();
@@ -582,7 +567,17 @@ class Program
 
     private static async Task DoSpeak(string what)
     {
-        List<string> parts = await SplitOnSquareStar(what);
+        string temp;
+        if (_ss.SplitCaps)
+        {
+            temp = await InsertSpaceBeforeUppercase(what);
+        }
+        else
+        {
+            temp = what;
+        }
+
+        List<string> parts = await SplitOnSquareStar(temp);
         foreach (string part in parts)
         {
             if (part == "[*]")
@@ -591,19 +586,21 @@ class Program
             }
             else
             {
-                await _DoSpeak(part);
+                string speakPart = await ReplacePunctuations(temp);
+                await _DoSpeak(speakPart);
             }
         }
+
     }
 
     private static async Task _DoSpeak(string what)
     {
-        _debugLogger.Log("Enter: doSpeak");
+        await _debugLogger.Log("Enter: doSpeak");
         // Important: lots of the settings live in
         // this builder
         string ssml = await BuildSsml(what);
 
-        // Set the rate of speech (-109 to 10)
+        // Set the rate of speech (-19 to 10)
         _speaker.Rate = _ss.SpeechRate;
 
 
@@ -611,20 +608,26 @@ class Program
         _speaker.Volume = _ss.VoiceVolume;
 
         // Start speaking
-        _speaker.SpeakSsmlAsync(ssml);
-        //_audioQueue.EnqueueText(builder);
+        await _debugLogger.Log($"SSML: {ssml}");
+        if (_ss.AudioTarget == "right" || _ss.AudioTarget == "left") {
+            await _debugLogger.Log($"EnqueueText");
+            _audioQueue.EnqueueText(ssml);
+        } else {
+            await _debugLogger.Log($"SpeakSsmlasync");
+            _speaker.SpeakSsmlAsync(ssml);
+        }
 
     }
 
     private static async Task InstantTtsExit()
     {
-        _debugLogger.Log("Enter: instantTtsExit");
+        await _debugLogger.Log("Enter: instantTtsExit");
         Environment.Exit(0);
     }
 
     private static async Task<string> IsolateCommand(string line)
     {
-        _debugLogger.Log("Enter: isolateCommand");
+        await _debugLogger.Log("Enter: isolateCommand");
         string cmd = line.Trim();
         int firstIndex = cmd.IndexOf(' ');
         if (firstIndex >= 0)
@@ -636,7 +639,7 @@ class Program
 
     private static async Task<(string, string)> IsolateCmdAndParams(string line)
     {
-        _debugLogger.Log("Enter: isolateParams");
+        await _debugLogger.Log("Enter: isolateParams");
         string justCmd = await IsolateCommand(line);
         string cmd = justCmd + " ";
 
@@ -646,7 +649,7 @@ class Program
         {
             parameters = parameters.Substring(1, parameters.Length - 2);
         }
-        _debugLogger.Log($"Exit: isolateParams: {parameters}");
+        await _debugLogger.Log($"Exit: isolateParams: {parameters}");
         return (justCmd, parameters);
     }
 }
