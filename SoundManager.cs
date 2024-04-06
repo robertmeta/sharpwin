@@ -7,11 +7,21 @@ public class SoundManager
     public static SoundManager Instance => _instance.Value;
 
     private IWavePlayer _waveOutDevice;
-    private WaveStream _audioStream;
+    private WaveChannel32 _waveChannel;
 
     private SoundManager()
     {
         // Private constructor to enforce singleton pattern
+    }
+
+    public float Volume
+    {
+        get => _waveChannel?.Volume ?? 1f;
+        set
+        {
+            if (_waveChannel != null)
+                _waveChannel.Volume = value;
+        }
     }
 
     public async Task PlaySoundAsync(string filePath)
@@ -24,10 +34,13 @@ public class SoundManager
             var vorbisReader = new VorbisReader(filePath);
 
             // Convert the NVorbis reader to a wave stream that NAudio can play
-            _audioStream = new WaveChannel32(new VorbisWaveReader(vorbisReader));
-            _waveOutDevice = new WaveOutEvent();
+            var waveStream = new VorbisWaveReader(vorbisReader);
 
-            _waveOutDevice.Init(_audioStream);
+            // Create a WaveChannel32 to allow volume control
+            _waveChannel = new WaveChannel32(waveStream);
+
+            _waveOutDevice = new WaveOutEvent();
+            _waveOutDevice.Init(_waveChannel);
         });
 
         _waveOutDevice.Play();
@@ -36,10 +49,9 @@ public class SoundManager
     public void StopCurrentSound()
     {
         _waveOutDevice?.Stop();
-        _audioStream?.Dispose();
+        _waveChannel?.Dispose();
         _waveOutDevice?.Dispose();
-
-        _audioStream = null;
+        _waveChannel = null;
         _waveOutDevice = null;
     }
 }
@@ -56,7 +68,6 @@ internal class VorbisWaveReader : WaveStream
     }
 
     public override WaveFormat WaveFormat => _waveFormat;
-
     public override long Length => _reader.TotalSamples * _reader.Channels * 2;
 
     public override long Position
@@ -67,7 +78,7 @@ internal class VorbisWaveReader : WaveStream
 
     public override int Read(byte[] buffer, int offset, int count)
     {
-        // Calculate the number of float samples to read. 
+        // Calculate the number of float samples to read.
         // Since we're assuming 16-bit samples, each sample is 2 bytes.
         int samplesToRead = count / 2;
 

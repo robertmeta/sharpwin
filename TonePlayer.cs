@@ -1,16 +1,43 @@
-public class TonePlayer
+using System;
+using System.Threading.Tasks;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
+
+public class TonePlayer : IDisposable
 {
-    public async Task PlayPureToneAsync(int frequencyInHz, int durationInMillis)
+    private readonly WaveOutEvent waveOut;
+    private readonly SignalGenerator signalGenerator;
+
+    public TonePlayer()
+    {
+        waveOut = new WaveOutEvent();
+        signalGenerator = new SignalGenerator();
+    }
+
+    public async Task PlayPureToneAsync(int frequencyInHz, int durationInMillis, float volume)
     {
         await Task.Run(() =>
         {
-            Console.Beep(frequencyInHz, durationInMillis);
+            signalGenerator.Frequency = frequencyInHz;
+            signalGenerator.Gain = volume;
+            signalGenerator.Type = SignalGeneratorType.Sin;
+
+            waveOut.Init(signalGenerator);
+            waveOut.Play();
+
+            Task.Delay(durationInMillis).Wait();
+
+            waveOut.Stop();
         });
     }
 
     public void Stop()
     {
-        // No need to implement the stop method since Console.Beep is a blocking call
-        // and will automatically stop after the specified duration
+        waveOut?.Stop();
+    }
+
+    public void Dispose()
+    {
+        waveOut?.Dispose();
     }
 }

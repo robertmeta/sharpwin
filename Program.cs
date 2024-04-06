@@ -540,7 +540,7 @@ class Program
         int frequency = int.TryParse(ps[0], out int f) ? f : 500;
         int durationInMillis = int.TryParse(ps[1], out int d) ? d : 75;
 
-        await _tonePlayer.PlayPureToneAsync(frequency, durationInMillis);
+        await _tonePlayer.PlayPureToneAsync(frequency, durationInMillis, _ss.ToneVolume);
     }
 
     private static async Task DoPlaySound(string p)
