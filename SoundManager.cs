@@ -1,6 +1,13 @@
 ﻿using NAudio.Wave;
 using NVorbis;
 
+
+using NAudio.Wave;
+using NVorbis;
+
+using NAudio.Wave;
+using NVorbis;
+
 public class SoundManager
 {
     private static readonly Lazy<SoundManager> _instance = new Lazy<SoundManager>(() => new SoundManager());
@@ -8,6 +15,7 @@ public class SoundManager
 
     private IWavePlayer _waveOutDevice;
     private WaveChannel32 _waveChannel;
+    private float _volume = 1f;
 
     private SoundManager()
     {
@@ -16,11 +24,12 @@ public class SoundManager
 
     public float Volume
     {
-        get => _waveChannel?.Volume ?? 1f;
+        get => _volume;
         set
         {
+            _volume = value;
             if (_waveChannel != null)
-                _waveChannel.Volume = value;
+                _waveChannel.Volume = _volume;
         }
     }
 
@@ -38,12 +47,12 @@ public class SoundManager
 
             // Create a WaveChannel32 to allow volume control
             _waveChannel = new WaveChannel32(waveStream);
+            _waveChannel.Volume = _volume; // Set the volume after initializing WaveChannel32
 
             _waveOutDevice = new WaveOutEvent();
             _waveOutDevice.Init(_waveChannel);
+            _waveOutDevice.Play();
         });
-
-        _waveOutDevice.Play();
     }
 
     public void StopCurrentSound()
@@ -56,6 +65,7 @@ public class SoundManager
     }
 }
 
+// ... (VorbisWaveReader class remains the same)
 internal class VorbisWaveReader : WaveStream
 {
     private readonly VorbisReader _reader;
