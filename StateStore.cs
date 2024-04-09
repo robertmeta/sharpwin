@@ -179,8 +179,33 @@ public class StateStore
     {
         using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
         {
-            string voiceSubstring = value;
-            var matchingVoice = synthesizer.GetInstalledVoices().FirstOrDefault(v => v.VoiceInfo.Name.Contains(voiceSubstring));
+            string language = null;
+            string voiceName = null;
+
+            // Parse the input string to extract language and voice name
+            string[] parts = value.Split(':');
+            if (parts.Length == 1)
+            {
+                if (parts[0].StartsWith(":"))
+                {
+                    voiceName = parts[0].Substring(1);
+                }
+                else
+                {
+                    language = parts[0];
+                }
+            }
+            else if (parts.Length == 2)
+            {
+                language = parts[0];
+                voiceName = parts[1];
+            }
+
+            // Find the matching voice based on language and voice name
+            var matchingVoice = synthesizer.GetInstalledVoices()
+                .FirstOrDefault(v =>
+                    (string.IsNullOrEmpty(language) || v.VoiceInfo.Culture.Name.StartsWith(language)) &&
+                    (string.IsNullOrEmpty(voiceName) || v.VoiceInfo.Name.Contains(voiceName)));
 
             if (matchingVoice != null)
             {
@@ -191,7 +216,8 @@ public class StateStore
                 _voice = "donotset";
             }
         }
-        Console.WriteLine("Voice is set to: "+_voice);
+
+        Console.WriteLine("Voice is set to: " + _voice);
     }
     public void SetVoiceVolume(int value) { _voiceVolume = value; }
 }

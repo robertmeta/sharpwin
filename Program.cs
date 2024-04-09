@@ -95,8 +95,8 @@ class Program
                     case "tts_set_tone_volume":
                         await QueueLine(cmd, parameters);
                         break;
-                    case "tts_set_voice":
-                        await QueueLine(cmd, parameters);
+                    case "set_lang": 
+                        await TtsSetVoice(parameters);
                         break;
                     case "tts_set_voice_volume":
                         await QueueLine(cmd, parameters);
@@ -443,7 +443,13 @@ class Program
     private static async Task TtsSetVoice(string p)
     {
         await _debugLogger.Log("Enter: ttsSetVoice");
-        _ss.SetVoice(p);
+        string[] ps = p.Split(' ');
+        if (ps.Length == 2) {
+            _ss.SetVoice(ps[0]);
+            if (ps[1] == "t") {
+                    DoSpeak("Voice set to: "+_ss.Voice);
+            }
+        }
     }
 
     private static async Task TtsSetToneVolume(string p)
