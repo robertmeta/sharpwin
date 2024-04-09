@@ -8,10 +8,12 @@ public class MonoToStereoProvider : IWaveProvider
 
     public MonoToStereoProvider(IWaveProvider sourceWaveProvider, string target)
     {
-        if (target == "right") {
+        if (target == "right")
+        {
             this.LeftVolume = 0.0f;
         }
-        if (target == "left") {
+        if (target == "left")
+        {
             this.RightVolume = 0.0f;
         }
         if (sourceWaveProvider.WaveFormat.Channels != 1)

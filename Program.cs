@@ -95,7 +95,7 @@ class Program
                     case "tts_set_tone_volume":
                         await QueueLine(cmd, parameters);
                         break;
-                    case "set_lang": 
+                    case "set_lang":
                         await TtsSetVoice(parameters);
                         break;
                     case "tts_set_voice_volume":
@@ -416,17 +416,18 @@ class Program
         await _debugLogger.Log("Enter: BuildSsml");
         float pm = _ss.PitchMultiplier;
         string prepend = "";
-        if (pm >= 0.0) {
+        if (pm >= 0.0)
+        {
             prepend = "+";
         }
-                
-        
+
+
         // <audio src='path/to/your/audio/file.wav'/>
         string ssml = @"
 <speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
-    <voice name='"+_ss.Voice+@"'>
-        <prosody pitch='"+prepend+_ss.PitchMultiplier+@"'>
-            "+p+@"
+    <voice name='" + _ss.Voice + @"'>
+        <prosody pitch='" + prepend + _ss.PitchMultiplier + @"'>
+            " + p + @"
         </prosody>
     </voice>
 </speak>";
@@ -444,10 +445,12 @@ class Program
     {
         await _debugLogger.Log("Enter: ttsSetVoice");
         string[] ps = p.Split(' ');
-        if (ps.Length == 2) {
+        if (ps.Length == 2)
+        {
             _ss.SetVoice(ps[0]);
-            if (ps[1] == "t") {
-                    DoSpeak("Voice set to: "+_ss.Voice);
+            if (ps[1] == "t")
+            {
+                DoSpeak("Voice set to: " + _ss.Voice);
             }
         }
     }
@@ -617,10 +620,13 @@ class Program
 
         // Start speaking
         await _debugLogger.Log($"SSML: {ssml}");
-        if (_ss.AudioTarget == "right" || _ss.AudioTarget == "left") {
+        if (_ss.AudioTarget == "right" || _ss.AudioTarget == "left")
+        {
             await _debugLogger.Log($"EnqueueText");
             _audioQueue.EnqueueText(ssml);
-        } else {
+        }
+        else
+        {
             await _debugLogger.Log($"SpeakSsmlasync");
             _speaker.SpeakSsmlAsync(ssml);
         }
