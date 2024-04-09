@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Speech.Synthesis;
 
 public class StateStore
@@ -24,24 +25,21 @@ public class StateStore
         set { _audioTarget = value; }
     }
 
-    private List<(string, string)> _pendingQueue = new List<(string, string)>();
-    public List<(string, string)> PendingQueue
+    private ConcurrentQueue<(string, string)> _pendingQueue = new ConcurrentQueue<(string, string)>();
+    public ConcurrentQueue<(string, string)> PendingQueue
     {
         get { return _pendingQueue; }
-        set { _pendingQueue = value; }
     }
 
     public void AppendToPendingQueue((string, string) item)
     {
-        _pendingQueue.Add(item);
+        _pendingQueue.Enqueue(item);
     }
 
     public (string cmd, string parameters) PopFromPendingQueue()
     {
-        if (_pendingQueue.Any())
+        if (_pendingQueue.TryDequeue(out var item))
         {
-            var item = _pendingQueue.First();
-            _pendingQueue.RemoveAt(0);
             return item;
         }
         return (null, null);

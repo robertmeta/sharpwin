@@ -34,24 +34,53 @@ public class AudioTargetQueue
         }
     }
 
+
+
+
+    public void Stop()
+    {
+        _textQueue.Clear();
+        if (_isPlaying)
+        {
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
+    }
+
     private async Task PlayQueueAsync(CancellationToken cancellationToken)
     {
         _isPlaying = true;
         while (_textQueue.Count > 0 && !cancellationToken.IsCancellationRequested)
         {
             var text = _textQueue.Dequeue();
-            await SynthesizeAndPlayAsync(text, cancellationToken);
+            try
+            {
+                await SynthesizeAndPlayAsync(text, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                // Handle cancellation gracefully
+                break;
+            }
         }
         _isPlaying = false;
     }
 
+
+
+
+
+
     private async Task SynthesizeAndPlayAsync(string text, CancellationToken cancellationToken)
     {
-        using (var synthesizer = new SpeechSynthesizer())
         using (var ms = new MemoryStream())
         {
-            synthesizer.SetOutputToWaveStream(ms);
-            synthesizer.SpeakSsml(text);
+            using (var synthesizer = new SpeechSynthesizer())
+            {
+                synthesizer.SetOutputToWaveStream(ms);
+                synthesizer.SpeakSsml(text);
+            }
+
             ms.Position = 0;
 
             using (var waveOut = new WaveOutEvent())
@@ -63,26 +92,12 @@ public class AudioTargetQueue
 
                 while (waveOut.PlaybackState == PlaybackState.Playing && !cancellationToken.IsCancellationRequested)
                 {
-                    await Task.Delay(100, cancellationToken); // Reduce CPU usage and allow cancellation
+                    await Task.Delay(100, cancellationToken);
                 }
 
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    waveOut.Stop();
-                }
+                waveOut.Stop();
             }
         }
     }
 
-    public void Stop()
-    {
-        _textQueue.Clear();
-        if (_isPlaying)
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-            // Create a new CancellationTokenSource for future use
-            _cancellationTokenSource = new CancellationTokenSource();
-        }
-    }
 }

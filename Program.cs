@@ -37,7 +37,7 @@ class Program
                             await ProcessAndQueueAudioIcon(parameters);
                             break;
                         case "c":
-                            await ProcessAndQueueCodes(l);
+                            await DoDiscard(cmd, parameters);
                             break;
                         case "d":
                             await DispatchPendingQueue();
@@ -67,13 +67,15 @@ class Program
                             await InstantTtsExit();
                             break;
                         case "tts_pause":
-                            await InstantTtsPause();
+                            await DoDiscard(cmd, parameters);
+                            //await InstantTtsPause();
                             break;
                         case "tts_reset":
                             await InstantTtsReset();
                             break;
                         case "tts_resume":
-                            await InstantTtsResume();
+                            await DoDiscard(cmd, parameters);
+                            //await InstantTtsResume();
                             break;
                         case "tts_say":
                             await InstantTtsSay(parameters);
@@ -106,7 +108,8 @@ class Program
                             await QueueLine(cmd, parameters);
                             break;
                         case "tts_sync_state":
-                            await ProcessAndQueueSync(l);
+                            await DoDiscard(cmd, parameters);
+                            //await ProcessAndQueueSync(l);
                             break;
                         case "version":
                             await InstantVersion();
@@ -288,6 +291,12 @@ class Program
         _ss.SetPreDelay(oldPreDelay);
     }
 
+    private static async Task DoDiscard(string c, string p)
+    {
+        await _debugLogger.Log($"Intentionally Discarded: {c} {p}");
+    }
+
+
     private static async Task DoStopSpeaking()
     {
         await _debugLogger.Log("Enter: doStopSpeaking");
@@ -418,21 +427,12 @@ class Program
     private static async Task<string> BuildSsml(string p)
     {
         await _debugLogger.Log("Enter: BuildSsml");
-        float pm = _ss.PitchMultiplier;
-        string prepend = "";
-        if (pm >= 0.0)
-        {
-            prepend = "+";
-        }
-
 
         // <audio src='path/to/your/audio/file.wav'/>
         string ssml = @"
 <speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
     <voice name='" + _ss.Voice + @"'>
-        <prosody pitch='" + prepend + _ss.PitchMultiplier + @"'>
             " + p + @"
-        </prosody>
     </voice>
 </speak>";
         return ssml;
