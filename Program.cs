@@ -8,7 +8,7 @@ using NAudio.Wave;
 class Program
 {
     private static Logger _debugLogger = Logger.GetInstance();
-    private static string _version = "1.0.1";
+    private static string _version = "1.1.2";
     private static string _name = "SharpWin";
     private static StateStore _ss = new StateStore();
     private static SpeechSynthesizer _speaker = new SpeechSynthesizer();
@@ -17,115 +17,119 @@ class Program
 
     static async Task Main(string[] args)
     {
-
-        await _debugLogger.Log("Enter: main");
-        await InstantVersion();
-
-        _audioQueue.SetTarget(_ss.AudioTarget);
-
-        while (true)
+        try
         {
-            try
+            await _debugLogger.Log("Enter: main");
+            await InstantVersion();
+
+            _audioQueue.SetTarget(_ss.AudioTarget);
+
+            while (true)
             {
-                string l = Console.ReadLine();
-                await _debugLogger.Log($"got line {l}");
-                (string cmd, string parameters) = await IsolateCmdAndParams(l);
-                switch (cmd)
+                try
                 {
-                    case "a":
-                        await ProcessAndQueueAudioIcon(parameters);
-                        break;
-                    case "c":
-                        await ProcessAndQueueCodes(l);
-                        break;
-                    case "d":
-                        await DispatchPendingQueue();
-                        break;
-                    case "l":
-                        await InstantLetter(parameters);
-                        break;
-                    case "p":
-                        await DoPlaySound(parameters);
-                        break;
-                    case "q":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "s":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "sh":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "t":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "tts_allcaps_beep":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "tts_exit":
-                        await InstantTtsExit();
-                        break;
-                    case "tts_pause":
-                        await InstantTtsPause();
-                        break;
-                    case "tts_reset":
-                        await InstantTtsReset();
-                        break;
-                    case "tts_resume":
-                        await InstantTtsResume();
-                        break;
-                    case "tts_say":
-                        await InstantTtsSay(parameters);
-                        break;
-                    case "tts_set_character_scale":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "tts_set_pitch_multiplier":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "tts_set_punctuations":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "tts_set_sound_volume":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "tts_set_speech_rate":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "tts_set_tone_volume":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "set_lang":
-                        await TtsSetVoice(parameters);
-                        break;
-                    case "tts_set_voice_volume":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "tts_split_caps":
-                        await QueueLine(cmd, parameters);
-                        break;
-                    case "tts_sync_state":
-                        await ProcessAndQueueSync(l);
-                        break;
-                    case "version":
-                        await InstantVersion();
-                        break;
-                    default:
-                        await UnknownLine(l);
-                        break;
+                    string l = Console.ReadLine();
+                    await _debugLogger.Log($"got line {l}");
+                    (string cmd, string parameters) = await IsolateCmdAndParams(l);
+                    switch (cmd)
+                    {
+                        case "a":
+                            await ProcessAndQueueAudioIcon(parameters);
+                            break;
+                        case "c":
+                            await ProcessAndQueueCodes(l);
+                            break;
+                        case "d":
+                            await DispatchPendingQueue();
+                            break;
+                        case "l":
+                            await InstantLetter(parameters);
+                            break;
+                        case "p":
+                            await DoPlaySound(parameters);
+                            break;
+                        case "q":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "s":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "sh":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "t":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "tts_allcaps_beep":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "tts_exit":
+                            await InstantTtsExit();
+                            break;
+                        case "tts_pause":
+                            await InstantTtsPause();
+                            break;
+                        case "tts_reset":
+                            await InstantTtsReset();
+                            break;
+                        case "tts_resume":
+                            await InstantTtsResume();
+                            break;
+                        case "tts_say":
+                            await InstantTtsSay(parameters);
+                            break;
+                        case "tts_set_character_scale":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "tts_set_pitch_multiplier":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "tts_set_punctuations":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "tts_set_sound_volume":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "tts_set_speech_rate":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "tts_set_tone_volume":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "set_lang":
+                            await TtsSetVoice(parameters);
+                            break;
+                        case "tts_set_voice_volume":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "tts_split_caps":
+                            await QueueLine(cmd, parameters);
+                            break;
+                        case "tts_sync_state":
+                            await ProcessAndQueueSync(l);
+                            break;
+                        case "version":
+                            await InstantVersion();
+                            break;
+                        default:
+                            await UnknownLine(l);
+                            break;
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error: {e.Message}");
-                Environment.Exit(0);
-            }
-        } // End of while loop
+                catch (Exception e)
+                {
+                    _debugLogger.Log($"Inner Error: {e.Message}");
+                    Console.WriteLine($"Error: {e.Message}");
+                }
+            } // End of while loop
+        }
+        catch (Exception e)
+        {
+            _debugLogger.Log($"Outer Error: {e.Message}");
+            Console.WriteLine($"Error: {e.Message}");
+        }
+
     }
-
-
-
-
 
     private static async Task DispatchPendingQueue()
     {

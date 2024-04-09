@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -27,7 +28,8 @@ class Logger
             {
                 if (instance == null)
                 {
-                    string fileName = $"swiftmac-debug-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.log";
+                    int processId = Process.GetCurrentProcess().Id;
+                    string fileName = $"swiftmac-debug-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}-{processId}.log";
                     instance = new Logger(fileName);
                 }
             }

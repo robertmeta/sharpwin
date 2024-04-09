@@ -217,7 +217,6 @@ public class StateStore
             }
         }
 
-        Console.WriteLine("Voice is set to: " + _voice);
     }
     public void SetVoiceVolume(int value) { _voiceVolume = value; }
 }
