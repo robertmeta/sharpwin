@@ -8,7 +8,7 @@ using NAudio.Wave;
 class Program
 {
     private static Logger _debugLogger = Logger.GetInstance();
-    private static string _version = "1.1.2";
+    private static string _version = "1.1.5";
     private static string _name = "SharpWin";
     private static StateStore _ss = new StateStore();
     private static SpeechSynthesizer _speaker = new SpeechSynthesizer();
@@ -20,9 +20,16 @@ class Program
         try
         {
             await _debugLogger.Log("Enter: main");
-            await InstantVersion();
 
             _audioQueue.SetTarget(_ss.AudioTarget);
+            if (_ss.AudioTarget == "right" || _ss.AudioTarget == "left")
+            {
+                await DoSpeak("Notifications Server Running");
+            }
+            else
+            {
+                await InstantVersion();
+            }
 
             while (true)
             {
@@ -93,7 +100,7 @@ class Program
                             await QueueLine(cmd, parameters);
                             break;
                         case "tts_set_speech_rate":
-                            await QueueLine(cmd, parameters);
+                            await InstantSetSpeechRate(parameters);
                             break;
                         case "tts_set_tone_volume":
                             await QueueLine(cmd, parameters);
@@ -172,8 +179,6 @@ class Program
                 case "tts_set_sound_volume":
                     await TtsSetSoundVolume(item.parameters);
                     break;
-                case "tts_set_speech_rate":
-                    await TtsSetSpeechRate(item.parameters);
                     break;
                 case "tts_set_tone_volume":
                     await TtsSetToneVolume(item.parameters);
@@ -486,9 +491,9 @@ class Program
         }
     }
 
-    private static async Task TtsSetSpeechRate(string p)
+    private static async Task InstantSetSpeechRate(string p)
     {
-        await _debugLogger.Log("Enter: ttsSetSpeechRate");
+        await _debugLogger.Log("Enter: InstantSetSpeechRate");
         if (int.TryParse(p, out int speechRate))
         {
             _ss.SetSpeechRate(speechRate);

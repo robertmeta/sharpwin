@@ -85,7 +85,7 @@ public class StateStore
         set { _soundVolume = value; }
     }
 
-    private int _speechRate = 2;
+    private int _speechRate = 5;
     public int SpeechRate
     {
         get { return _speechRate; }

@@ -5,8 +5,36 @@
 This is an emacspeak server written in C# intended to be as async as 
 reasonable, fast and responsive.
 
-## Hacking
+## Installing
 
-Coming soon
+1. dotnet build Sharpwin.sln 
+2. copy bin/Debug/net8..0/* $EMACSPEAK_DIR/servers
+3. add sharpwin to $EMACSPEAK_DIR/servers/.servers
+4. copy log-sharpwin.bat $EMACSPEAK_DIR/servers
+3. add log-sharpwin to $EMACSPEAK_DIR/servers/.servers
 
-## Having Trouble?
+## Emacspeak Setup
+
+1. Get Emacspeak setup as normal, you can do this by 
+hacking the Makefiles up a bit, or installing a unix
+like set of tools, I hope to add a custom builder to 
+this project soon that will be Make.ps1, instructions 
+here will be swapped with how to use Make.ps1 when I 
+create it. 
+
+## Configuration
+```
+  ; emacspeak paths and such before this 
+  (setopt dtk-program "sharpwin")
+  ; these are between 0 and 1
+  (setenv "SHARPWIN_TONE_VOLUME" "0.1")
+  (setenv "SHARPWIN_SOUND_VOLUME" "0.1")
+  ; this is between 0 and 100
+  (setenv "SHARPWIN_VOICE_VOLUME" "100")
+  (push "sharpwin" tts-multi-engines)
+  (setopt tts-notification-device "right")
+  (require 'emacspeak-setup)
+  ; Heree you can just do "en-US" or just ":Zira"
+  (dtk-set-language "en-US:Zira")
+  (dtk-set-rate 8 t)
+```
