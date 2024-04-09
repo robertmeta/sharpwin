@@ -8,7 +8,7 @@ using NAudio.Wave;
 class Program
 {
     private static Logger _debugLogger = Logger.GetInstance();
-    private static string _version = "1.1.5";
+    private static string _version = "1.2.0"; // first public release
     private static string _name = "SharpWin";
     private static StateStore _ss = new StateStore();
     private static SpeechSynthesizer _speaker = new SpeechSynthesizer();
