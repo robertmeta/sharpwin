@@ -19,59 +19,51 @@ public class AudioTargetQueue
         _cancellationTokenSource = new CancellationTokenSource();
     }
 
-    public void SetTarget(string t) {
+    public void SetTarget(string t)
+    {
         _target = t;
     }
 
     public void EnqueueText(string text)
     {
         _textQueue.Enqueue(text);
-
         if (!_isPlaying)
         {
             var cancellationToken = _cancellationTokenSource.Token;
-            PlayQueueAsync(cancellationToken).ConfigureAwait(false);
+            _ = PlayQueueAsync(cancellationToken);
         }
     }
 
     private async Task PlayQueueAsync(CancellationToken cancellationToken)
     {
         _isPlaying = true;
-
         while (_textQueue.Count > 0 && !cancellationToken.IsCancellationRequested)
         {
             var text = _textQueue.Dequeue();
             await SynthesizeAndPlayAsync(text, cancellationToken);
         }
-
         _isPlaying = false;
     }
 
-    private Task SynthesizeAndPlayAsync(string text, CancellationToken cancellationToken)
+    private async Task SynthesizeAndPlayAsync(string text, CancellationToken cancellationToken)
     {
-        var tcs = new TaskCompletionSource<bool>();
-
         using (var synthesizer = new SpeechSynthesizer())
         using (var ms = new MemoryStream())
         {
             synthesizer.SetOutputToWaveStream(ms);
             synthesizer.SpeakSsml(text);
-
             ms.Position = 0;
 
             using (var waveOut = new WaveOutEvent())
             using (var rawSource = new RawSourceWaveStream(ms, new WaveFormat(22000, 1)))
             {
                 var stereo = new MonoToStereoProvider(rawSource, _target);
-
                 waveOut.Init(stereo);
                 waveOut.Play();
 
-                waveOut.PlaybackStopped += (s, e) => tcs.SetResult(true);
-
                 while (waveOut.PlaybackState == PlaybackState.Playing && !cancellationToken.IsCancellationRequested)
                 {
-                    System.Threading.Thread.Sleep(100); // Reduce CPU usage
+                    await Task.Delay(100, cancellationToken); // Reduce CPU usage and allow cancellation
                 }
 
                 if (cancellationToken.IsCancellationRequested)
@@ -79,20 +71,12 @@ public class AudioTargetQueue
                     waveOut.Stop();
                 }
             }
-
-            
         }
-
-        if (cancellationToken.IsCancellationRequested)
-        {
-            tcs.SetCanceled();
-        }
-
-        return tcs.Task;
     }
 
     public void Stop()
     {
+        _textQueue.Clear();
         if (_isPlaying)
         {
             _cancellationTokenSource.Cancel();

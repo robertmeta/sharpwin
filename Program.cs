@@ -288,6 +288,7 @@ class Program
     {
         await _debugLogger.Log("Enter: doStopSpeaking");
         _speaker.SpeakAsyncCancelAll();
+        _audioQueue.Stop();
     }
 
     private static async Task<bool> IsFirstLetterCapital(string str)
@@ -546,6 +547,7 @@ class Program
     private static async Task DoPlaySound(string p)
     {
         await _debugLogger.Log("Enter: doPlaySound");
+        SoundManager.Instance.Volume = _ss.SoundVolume;
         await SoundManager.Instance.PlaySoundAsync(p);
     }
 

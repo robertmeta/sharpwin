@@ -143,6 +143,7 @@ public class StateStore
             ToneVolume = toneVolume;
         }
 
+        VoiceVolume = 100;
         if (int.TryParse(GetEnvironmentVariable("SHARPWIN_VOICE_VOLUME"), out int voiceVolume))
         {
             VoiceVolume = voiceVolume;
