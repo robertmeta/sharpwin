@@ -13,15 +13,11 @@ reasonable, fast and responsive.
 
 ## Emacspeak Setup
 
-1. Get Emacspeak setup as normal, remember, you can run 
-it without building compiling the lisp files, just extracting 
-it and setting up config is enough. 
+Open a powershell, switch to SharpWin and run 
 
-If you want to build it properly, hacking the Makefiles up a 
-bit, or installing a unix like set of tools, I hope to add a
-custom builder to this project soon that will be Make.ps1, 
-instructions here will be swapped with how to use Make.ps1 
-when I create it.
+```./make.ps1``` 
+
+it will build SharpWin and Emacspeak for you.
 
 ## Configuration
 ```
