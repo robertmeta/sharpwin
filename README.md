@@ -7,17 +7,10 @@ reasonable, fast and responsive.
 
 ## Installing
 
-1. dotnet build Sharpwin.sln 
-2. copy bin/Debug/net8..0/* $EMACSPEAK_DIR/servers
-3. add sharpwin to $EMACSPEAK_DIR/servers/.servers
-
-## Emacspeak Setup
-
-Open a powershell, switch to SharpWin and run 
-
-```./make.ps1``` 
-
-it will build SharpWin and Emacspeak for you.
+1. Switch to Sharpwin directory in powershell
+2. $env:EMACSPEAK_DIR="/path/to/downloaded/emacspeak"
+3. ./make.ps1
+4. Setup your init.el with normal emacspeak stuff, example below
 
 ## Configuration
 ```
