@@ -8,17 +8,17 @@ reasonable, fast and responsive.
 ## Installing
 
 1. Switch to Sharpwin directory in powershell
-2. $env:EMACSPEAK_DIR="/path/to/downloaded/emacspeak"
+2. $env:EMACSPEAK_DIR="/path/to/emacspeak"
 3. ./make.ps1
 4. Setup your init.el with normal emacspeak stuff, example below
 
 ## Configuration
 ```
-  ; emacspeak paths and such before this 
+  (add-to-list 'load-path "path/to/emacspeak/lisp")
   (setopt dtk-program "sharpwin")
   ; these are between 0 and 1
-  (setenv "SHARPWIN_TONE_VOLUME" "0.1")
-  (setenv "SHARPWIN_SOUND_VOLUME" "0.1")
+  (setenv "SHARPWIN_TONE_VOLUME" "1.0")
+  (setenv "SHARPWIN_SOUND_VOLUME" "1.0")
   ; this is between 0 and 100
   (setenv "SHARPWIN_VOICE_VOLUME" "100")
   (push "sharpwin" tts-multi-engines)
