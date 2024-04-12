@@ -227,3 +227,5 @@ foreach ($elFile in $elFiles) {
         Write-Error "Failed to compile $elFile"
     }
 }
+
+Set-Location -Path "$scriptDir"
