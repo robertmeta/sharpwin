@@ -1,14 +1,60 @@
-using System.Speech.Synthesis;
-using System.Text.RegularExpressions;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Speech.Synthesis;
+using System.Text.RegularExpressions;
 using NAudio.Wave;
+
+
+public class LogSharpwin
+{
+    private StreamWriter logWriter;
+    private bool isEnabled;
+
+    public LogSharpwin()
+    {
+        string executableName = Process.GetCurrentProcess().ProcessName + ".exe";
+        if (executableName.Equals("log-sharpwin.exe", StringComparison.OrdinalIgnoreCase))
+        {
+            isEnabled = true;
+            int processId = Process.GetCurrentProcess().Id;
+            string tempPath = Path.GetTempPath();
+            string logFileName = $"sharpwin_{processId}.log";
+            string fullPath = Path.Combine(tempPath, logFileName);
+
+            // Initialize StreamWriter for the log file with autoFlush set to true
+            logWriter = new StreamWriter(fullPath, append: true, encoding: System.Text.Encoding.UTF8)
+            {
+                AutoFlush = true
+            };
+        }
+        else
+        {
+            isEnabled = false;
+        }
+    }
+
+    public void Log(string message)
+    {
+        if (isEnabled)
+        {
+            logWriter.WriteLine($"{message}");
+        }
+    }
+
+    // Ensure resources are properly released
+    public void Close()
+    {
+        logWriter?.Close();
+    }
+}
+
+
 
 class Program
 {
     private static Logger _debugLogger = Logger.GetInstance();
-    private static string _version = "1.2.0"; // first public release
+    private static string _version = "1.3.0"; 
     private static string _name = "SharpWin";
     private static StateStore _ss = new StateStore();
     private static SpeechSynthesizer _speaker = new SpeechSynthesizer();
@@ -20,6 +66,8 @@ class Program
         try
         {
             await _debugLogger.Log("Enter: main");
+            LogSharpwin logger = new LogSharpwin();
+
 
             _audioQueue.SetTarget(_ss.AudioTarget);
             if (_ss.AudioTarget == "right" || _ss.AudioTarget == "left")
@@ -39,6 +87,7 @@ class Program
                     if (l == null) {
                         return;
                     }
+                    logger.Log(l);
                     
                     await _debugLogger.Log($"got line {l}");
                     (string cmd, string parameters) = await IsolateCmdAndParams(l);
