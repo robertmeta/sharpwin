@@ -29,7 +29,7 @@ class Logger
                 if (instance == null)
                 {
                     int processId = Process.GetCurrentProcess().Id;
-                    string fileName = $"swiftmac-debug-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}-{processId}.log";
+                    string fileName = $"sharpwin-debug-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{processId}.log";
                     instance = new Logger(fileName);
                 }
             }
