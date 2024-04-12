@@ -143,6 +143,32 @@ if (-not ($currentContent -contains "sharpwin")) {
     "sharpwin" | Out-File -FilePath $serversFile -Append
     Write-Host "Added 'sharpwin' to $serversFile"
 }
+# Specify the file path
+$dtkSpeak = Join-Path -Path $emacspeak_dir -ChildPath "lisp\dtk-speak.el"
+
+# Read all lines from the file
+$lines = Get-Content -Path $dtkSpeak
+
+# Check if any line contains "SHARPWIN_AUDIO_TARGET"
+if (-not ($lines | Where-Object { $_ -match "SHARPWIN_AUDIO_TARGET" })) {
+    # If SHARPWIN_AUDIO_TARGET is not found, find the line with SWIFTMAC_AUDIO_TARGET, duplicate and modify it
+    $modifiedLines = @()
+    foreach ($line in $lines) {
+        $modifiedLines += $line
+        if ($line -match "SWIFTMAC_AUDIO_TARGET") {
+            $newLine = $line -replace "SWIFTMAC_AUDIO_TARGET", "SHARPWIN_AUDIO_TARGET"
+            $modifiedLines += $newLine
+        }
+    }
+
+    # Write the modified lines back to the file
+    Set-Content -Path $dtkSpeak -Value $modifiedLines
+} else {
+    Write-Host "The file already contains 'SHARPWIN_AUDIO_TARGET'. No changes made."
+}
+
+
+
 
 # Define the path pattern for .elc files in the emacspeak lisp directory
 $elcFilesPattern = Join-Path $emacspeak_dir "lisp\*.elc"

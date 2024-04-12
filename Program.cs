@@ -36,6 +36,10 @@ class Program
                 try
                 {
                     string l = Console.ReadLine();
+                    if (l == null) {
+                        return;
+                    }
+                    
                     await _debugLogger.Log($"got line {l}");
                     (string cmd, string parameters) = await IsolateCmdAndParams(l);
                     switch (cmd)
@@ -621,11 +625,11 @@ class Program
         string ssml = await BuildSsml(what);
 
         // Set the rate of speech (-19 to 10)
-        _speaker.Rate = _ss.SpeechRate;
+        _speaker.Rate = Math.Clamp(_ss.SpeechRate, -10, 10);
 
 
         // Set the volume (0 to 100)
-        _speaker.Volume = _ss.VoiceVolume;
+        _speaker.Volume = Math.Clamp(_ss.VoiceVolume, 0, 100);
 
         // Start speaking
         await _debugLogger.Log($"SSML: {ssml}");
