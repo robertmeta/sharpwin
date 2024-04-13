@@ -5,6 +5,10 @@
 This is an emacspeak server written in C# intended to be as async as 
 reasonable, fast and responsive.
 
+It is assumed if you are using this from this repo, you are also using 
+the git version of emacspeak, this tracks very close to the ongoing 
+emacspeak work. 
+
 ## Installing
 
 1. Switch to Sharpwin directory in powershell
