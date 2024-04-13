@@ -52,7 +52,7 @@
 ;;; win:
 ;;;###autoload
 (defun win ()
-  "Swiftmac TTS."
+  "Sharpwin TTS."
   (interactive)
   (win-configure-tts)
   (ems--fastload "voice-defs")
@@ -73,14 +73,14 @@
 ;;;   voice table
 
 (defvar win-default-voice-string "[{voice systemDefault}]"
-  "Default Swiftmac tag for  default voice.")
+  "Default Sharpwin tag for  default voice.")
 
 (defvar win-voice-table (make-hash-table)
-  "Association between symbols and strings to set Swiftmac  voices.
+  "Association between symbols and strings to set Sharpwin  voices.
 The string can set any voice parameter.")
 
 (defun win-define-voice (name command-string)
-  "Define a Swiftmac  voice named NAME.
+  "Define a Sharpwin  voice named NAME.
 This voice will be set   by sending the string
 COMMAND-STRING to the TTS engine."
   (cl-declare (special win-voice-table))
@@ -298,7 +298,7 @@ and TABLE gives the values along that dimension."
            eight-bit-graphic))
   (setq emacspeak-play-program nil))
 
-;;;  tts-env for Swiftmac:
+;;;  tts-env for Sharpwin:
 
 (provide 'win-voices)
 
