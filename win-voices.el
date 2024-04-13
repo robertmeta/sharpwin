@@ -1,16 +1,16 @@
-;;; mac-voices.el --- Define  Mac tags  -*- lexical-binding: t; -*-
-;; $Id: mac-voices.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
+;;; win-voices.el --- Define  Win tags  -*- lexical-binding: t; -*-
+;; $Id: win-voices.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;; $Author: Dave $
-;; Description:  Module to set up Mac voices and personalities
-;; Keywords: Voice, Personality, Mac
+;; Description:  Module to set up Win voices and personalities
+;; Keywords: Voice, Personality, Win
 ;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
-;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
-;; A speech interface to Emacs |
+;; ewinspeak| T. V. Raman |tv.raman.tv@gmail.com
+;; A speech interface to Ewins |
 ;; 
 ;;  $Revision: 4532 $ |
-;; Location https://github.com/tvraman/emacspeak
+;; Location https://github.com/tvraman/ewinspeak
 ;; 
 
 ;;;   Copyright:
@@ -18,20 +18,20 @@
 ;; Copyright (C) 1995 -- 2024, T. V. Raman 
 ;; All Rights Reserved.
 ;; 
-;; This file is not part of GNU Emacs, but the same permissions apply.
+;; This file is not part of GNU Ewins, but the same permissions apply.
 ;; 
-;; GNU Emacs is free software; you can redistribute it and/or modify
+;; GNU Ewins is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
 ;; any later version.
 ;; 
-;; GNU Emacs is distributed in the hope that it will be useful,
+;; GNU Ewins is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 ;; 
 ;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to
+;; along with GNU Ewins; see the file COPYING.  If not, write to
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
@@ -39,22 +39,22 @@
 
 
 ;;; Commentary:
-;; This module defines the various voices used in voice-lock mode by Mac TTS.
+;; This module defines the various voices used in voice-lock mode by Win TTS.
 
 ;;; Code:
 
 ;;  Required modules: 
 
 (eval-when-compile (require 'cl-lib))
-(require 'emacspeak-preamble)           ;For `ems--fastload'.
+(require 'ewinspeak-preamble)           ;For `ems--fastload'.
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 
-;;; mac:
+;;; win:
 ;;;###autoload
 (defun sharpwin ()
-  "Swiftmac TTS."
+  "Swiftwin TTS."
   (interactive)
-  (mac-configure-tts)
+  (win-configure-tts)
   (ems--fastload "voice-defs")
   (dtk-select-server "sharpwin")
   (dtk-initialize))
@@ -73,14 +73,14 @@
 ;;;   voice table
 
 (defvar sharpwin-default-voice-string "[{voice systemDefault}]"
-  "Default Swiftmac tag for  default voice.")
+  "Default Swiftwin tag for  default voice.")
 
 (defvar sharpwin-voice-table (make-hash-table)
-  "Association between symbols and strings to set Swiftmac  voices.
+  "Association between symbols and strings to set Swiftwin  voices.
 The string can set any voice parameter.")
 
 (defun sharpwin-define-voice (name command-string)
-  "Define a Swiftmac  voice named NAME.
+  "Define a Swiftwin  voice named NAME.
 This voice will be set   by sending the string
 COMMAND-STRING to the TTS engine."
   (cl-declare (special sharpwin-voice-table))
@@ -298,7 +298,7 @@ and TABLE gives the values along that dimension."
            eight-bit-graphic))
   (setq esharpwinspeak-play-program nil))
 
-;;;  tts-env for Swiftmac:
+;;;  tts-env for Swiftwin:
 
 (provide 'sharpwin-voices)
 
