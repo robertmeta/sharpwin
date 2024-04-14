@@ -6,6 +6,8 @@
 -- Available from https://git-scm.com/download/win
 - Dotnet 8.0+
 -- https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+- Make
+-- https://gnuwin32.sourceforge.net/packages/make.htm
 
 ## Introduction 
 
