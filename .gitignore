@@ -3,3 +3,6 @@ bin/
 .vs/
 test.sh
 copy_it
+get_build_log
+build.log
+build
